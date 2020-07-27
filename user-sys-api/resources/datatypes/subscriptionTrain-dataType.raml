@@ -1,0 +1,45 @@
+#%RAML 1.0 DataType
+displayName: Subscribe Train
+description: Defines the fields to register train Datatype
+
+type: object
+properties:
+  id:
+    type: number
+    required: false
+  trainStation:
+    type: string
+    required: true
+    minLength: 3
+    maxLength: 3
+  subscribedTime:
+    type: string
+    required: true
+  userId: 
+    type: number
+    required: true
+  modifiedDate:
+    type: datetime
+    required: false
+  createdDate:
+    type: datetime
+    required: false 
+  createdBy: 
+    type: string
+    required: false
+  statusType: 
+    type: string
+    required: false
+  sourceLocation:
+    type: string
+    required: true
+    minLength: 3
+    maxLength: 3 
+  destinationLocation: 
+    type: string
+    required: true
+    minLength: 3
+    maxLength: 3
+  modifiedby: 
+    type: string
+    required: false

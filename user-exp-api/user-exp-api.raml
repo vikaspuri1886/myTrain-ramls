@@ -1,0 +1,196 @@
+#%RAML 1.0
+baseUri: https://anypoint.mulesoft.com/mocking/api/v1/links/46599387-6231-4fd4-9441-9f30f266d818/ # 
+title: user-exp-api
+version: 1.0.0
+description: This api is used to register, login, subscribe, unsubscribe, update subscription, reset password, get train stations to My Train application.
+
+traits:
+  responseMessages: !include /exchange_modules/d9d9eb2b-81d3-49a6-87d1-fc6bc8fc5063/responses/1.0.1/responses.raml
+
+types:
+  Customer: !include /resources/datatypes/customer-dataType.raml
+  Login: !include /resources/datatypes/login-dataType.raml
+  Trains: !include /resources/datatypes/trains-dataType.raml
+  Subscription: !include /resources/datatypes/subscription-dataType.raml
+
+/customers:
+  displayName: Perform customer operations.
+  description: This api is used to register, login, subscribe, unsubscribe, update subscription, and reset password in My Train application. This is also used to fetch all train stations
+  
+  /registrations:
+    displayName: Registerations operations.
+    description: This api is used to perform register, update, deactivate, and activate                        customer functionality.
+
+    /registerUser:
+      displayName: Register User.
+      description: This api is used to register customer in My Train application.
+      
+      post:
+        body:
+          application/json:
+            description: Payload should be object containing customer details.
+            type: Customer
+            examples: 
+             input: !include /resources/examples/customer-example.raml
+        responses:
+          200:
+            body: 
+              application/json:
+                example:
+                  message: User registered successfully successfully.
+        is: [responseMessages]
+
+
+    /updateUser:
+      displayName: Update registered customer.
+      description: This api is used to update the details of the customers who are already registered.
+      /{userId}:
+        put:
+          body:
+            application/json:
+              description: Payload should be object containing customer details.
+              type: Customer    
+              examples:
+                input: !include /resources/examples/customerWithId-example.raml
+        
+          responses:
+            200:
+              body: 
+                application/json:
+                  example:
+                    message: User updated successfully.
+          is: [responseMessages]
+
+    /deactivateUser:
+      displayName: Deactivate User
+      description: This api is used to deactivate the existing user.
+      /{userId}:
+        put:
+          responses:
+            200:
+              body: 
+                application/json:
+                  example:
+                    message: User deactivated successfully.
+          is: [responseMessages]
+
+    /activateUser:
+      displayName: Activate User
+      description: This api is used to activate the user.
+      /{userId}:
+        put:
+          responses:
+            200:
+              body: 
+                application/json:
+                  example:
+                    message: User activated successfully.
+          is: [responseMessages]
+  
+  /login:
+    displayName: Login User
+    description: This api is used in order to login to the application.
+    
+    post:
+      body:
+        application/json:
+          description: Payload should be object containing login details.
+          type: Login    
+          examples:
+            output: !include /resources/examples/login-example.raml
+      responses:
+            200:
+              body: 
+                application/json:
+                  example:
+                    message: User logged in successfully.
+      is: [responseMessages]
+
+  /resetPassword:
+    displayName: Reset Password
+    description: This api is used to reset the password of user, this will update the password in the Okta server.
+
+    post:
+      body:
+        application/json:
+          description: Payload should be object containing login details.
+          type: Login    
+          examples:
+            output: !include /resources/examples/login-example.raml
+      responses:
+            200:
+              body: 
+                application/json:
+                  example:
+                    message: Password reset successfully.
+      is: [responseMessages]
+
+  /subscriptions:
+    displayName: Subscribe customers.
+    description: This api is used to subscribe/unsubscribe/update the subscription of train.
+    /subscribeTrain:
+      displayName: Subscribe train
+      description: This api is used to subscribe the train.
+
+      post:
+        body:
+          application/json:
+            description: Payload should be object containing subscription details.
+            type: Subscription[]    
+            examples:
+              output: !include /resources/examples/subscriptionWithoutId-example.raml
+        responses:
+            200:
+              body: 
+                application/json:
+                  example:
+                    message: Train subscribed successfully.
+        is: [responseMessages]
+        
+    /deleteSubscription:
+      displayName: Subscribe train
+      description: This api will be used to unsubscribe the train.
+
+      /{subscriptionId}:
+        delete:
+          responses:
+            200:
+              body: 
+                application/json:
+                  example:
+                    message: Train unsubscribed.
+          is: [responseMessages]
+
+    /updateSubscription:
+      /{subscriptionId}:
+        displayName: Subscribe train
+        description: This api will be used to update the subscription the train.
+
+        put:
+          body:
+            application/json:
+              description: Payload should be object containing subscription details.
+              type: Subscription[]    
+              examples:
+                output: !include /resources/examples/subscriptionWithId-example.raml
+          responses:
+            200:
+              body: 
+                application/json:
+                  example:
+                    message: Subscription updated successfully.
+          is: [responseMessages]
+
+/fetchTrainStations:
+      displayName: Fetch trains.
+      description: This api will fetch all the train station codes of United Kingdom.
+
+      get:
+        responses: 
+          200:
+              body: 
+                application/json:
+                  type: Trains[]
+                  examples:
+                    output: !include /resources/examples/train-example.raml
+        is: [responseMessages]

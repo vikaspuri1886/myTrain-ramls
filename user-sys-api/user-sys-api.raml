@@ -1,0 +1,125 @@
+#%RAML 1.0
+title: user-sys-api
+version: 1.0.0
+description: This api is used to register/subscribe customer to My Train application.
+
+securitySchemes:
+  okta-auth: !include /exchange_modules/d9d9eb2b-81d3-49a6-87d1-fc6bc8fc5063/okta-auth/1.0.1/okta-auth.raml
+
+securedBy: [okta-auth]
+
+traits:
+  auth-header: !include /exchange_modules/d9d9eb2b-81d3-49a6-87d1-fc6bc8fc5063/okta-header/1.0.0/okta-header.raml
+  responseMessages: !include /exchange_modules/d9d9eb2b-81d3-49a6-87d1-fc6bc8fc5063/responses/1.0.1/responses.raml
+
+
+types:
+  Customer: !include resources/datatypes/customer-datatype.raml
+  Subscription: !include /resources/datatypes/subscriptionTrain-dataType.raml
+
+/customers:
+  description: This api is used to register/subscribe the customer in My Train applications.
+  /registration:
+    description: This api will be used to register/update the customer in My Train applications.
+
+    /registerUser:
+      displayName: Register User
+      post:
+        displayName: Register Customer
+        description: This api is used to register the customer in My Train application.
+        is: [auth-header, responseMessages]
+              
+        body:
+          application/json:
+            description: Payload should be object containing customer details.
+            type: Customer    
+            examples:
+              output: !include /resources/example/customer-example.raml
+        responses:
+          200:
+            body:
+              application/json:
+                example:
+                  message: "Customer registered"
+        
+    /updateUser:
+      displayName: Update User details
+      /{id}:
+        put:
+          displayName: Update registered Customer.
+          description: This api is used to update the customer in My Train application.
+          is: [auth-header, responseMessages]
+
+          body:
+            application/json:
+              description: Payload should be object containing customer details.
+              type: Customer    
+              examples:
+                output: !include /resources/example/customerWithId-example.raml
+          responses:
+            200:
+              body:
+                application/json:
+                  example:
+                    message: "Customer details updated"
+
+  /subscriptions:
+    description: This api will be used to subscribe/update/delete the train in My Train applications.
+    /subscribeTrain:
+      displayName: Subscribe train
+      post:
+        displayName: Subscribe Train
+        description: This api is used to subscribe the train in My Train application, so that we can recieve notifications when train is delayed.
+
+        is: [auth-header, responseMessages]
+
+        body:
+          application/json:
+            description: Payload should be object containing train details.
+            type: Subscription[]    
+            examples:
+              output: !include /resources/example/subsciption-example.raml
+        responses:
+            200:
+              body:
+                application/json:
+                  example:
+                    message: "Train subscribed successfully"
+
+    /deletedSubscription:
+      displayName: Unsubscribe train.
+      /{id}:
+        delete:
+          displayName: Delete subscribed train
+          description: This api is used to delete the already subscribed train.
+          
+          is: [auth-header, responseMessages]
+
+          responses:
+            200:
+              body:
+                application/json:
+                  example:
+                    message: "Train unsubscribed successfully"
+
+    /updateSubscription:
+      displayName: Update Subscription.
+      /{id}:
+        put:
+          displayName: Update subscribed Train
+          description: This api is used to update the subscribed train in My Train application.
+          is: [auth-header, responseMessages]
+          
+          body:
+            application/json:
+              description: Payload should be object containing Train details.
+              type: Subscription[]    
+              examples:
+                output: !include /resources/example/subsciptionWithId-example.raml
+          
+          responses:
+            200:
+              body:
+                application/json:
+                  example:
+                    message: "Train subscription updated successfully"

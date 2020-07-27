@@ -1,0 +1,42 @@
+#%RAML 1.0 Trait
+responses: 
+      400:
+          body:
+            application/json:
+              example:
+                message: Bad request. Please check the JSON object and make sure it's valid.
+      
+      401:
+        body:
+          application/json:
+            example:
+              message: User unauthorized.
+
+      403:
+        body:
+          application/json:
+            example:
+              message: You are not allowed to access this page.
+      408:
+        body:
+          application/json:
+            example:
+             message: Request timeout.
+
+      500:
+        body:
+          application/json:
+            example:
+              message: Something goes wrong while getting response from server.
+
+      503:
+        body:
+          application/json:
+            example:
+              message: Service is not available as of now.
+
+      504:
+        body:
+          application/json:
+            example:
+              message: Gateway timeout.
